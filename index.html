@@ -14,6 +14,11 @@
             flex-wrap: wrap;
         }
 
+        section {
+            height: 5vh;
+            width: 100vh;
+        }
+
        .cell {
             width: 25vh;
             height: 25vh;
@@ -25,20 +30,8 @@
 
     <body>
         <h1> tic-tac-toe</h1>
-     <main id ='board'>
-        <div> </div>
-        <div> </div>
-        <div> </div>
-
-        <div> </div>
-        <div> </div>
-        <div> </div>
-
-        <div> </div>
-        <div> </div>
-        <div> </div>
-     </main>
-          
+     <main id ='board'> </main>
+        <div id ='player-select'> </div>
     </body>
 
     <script>
@@ -51,26 +44,19 @@
     state.board = [ 
     null, null, null,
     null, null, null,
-    null, null, null ]
+    null, null, null ];
 
-    state.currentPlayer = ['x', 'o']    
+    state.players = ['x', 'o'] 
+    state.currentPlayerIndex = 0;   
 
-
-
-    // state.players = ['x', 'o']
-    // state.currentPlayerIndex = 0;
  }
 
-    resetState()
-
 // helper functions
-// const getCurrentPlayer = () => {
-//     return state.players[state.currentPlayerIndex]
-//}
+const getCurrentPlayer = () => state.players[state.currentPlayerIndex] // one line no return or {}
  
-// const changeTurn = () => {
-//     state.currentPlayerIndex = state.currentPlayerIndex === 0 ? 1 : 0;
-//}
+const changeTurn = () => {
+     state.currentPlayerIndex = state.currentPlayerIndex === 0 ? 1 : 0; //ternary decides player order
+}
 
 // render
 // const renderState = () => {
@@ -81,7 +67,7 @@
 
 // DOM selectors
 const boardElem = document.getElementById('board');
-// const playerTurnElem = document.getElementById('player-select');
+const playerTurnElem = document.getElementById('player-select');
 
 
 // DOM manipulations
@@ -96,31 +82,23 @@ const renderBoard = () => {
         boardElem.appendChild(cellElem);
     }
 }
-// const renderPlayer = () => {
-//     let text;
-//     if(!state.players[0] || !state.players[1]) {
-//         text = `
-//        <input name = 'player1' placeholder = 'enter name'> 
-//        <input name = 'player2' placeholder = 'enter name'>
-//        <button class = 'start'> start </button>
-//         `
-//     } else {
-//         text = `It is ${getCurrentPlayer}'s turn`
-//     }
-//     playerTurnElem.innerHtml = text;
-// }
+const renderPlayer = () => { 
+    const text = `It is ${getCurrentPlayer()}'s turn`
+    playerTurnElem.innerText = text;
+}
+   
 
 // event listeners
 
-boardElem.addEventListener('click', (event) => {
-    if(event.target.className !== 'cell') return;
+boardElem.addEventListener('click', (event) => { //event delegation
+    if(event.target.className !== 'cell') return; //keeps user from clicking board
 
     let cellIndex = event.target.dataset.index; //grabs data-index
-    state.board[cellIndex] = 'X'
+    state.board[cellIndex] = 'X';
 
-
+    changeTurn();
+    renderPlayer();
     renderBoard();
-
 
 }) 
 
