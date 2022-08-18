@@ -14,11 +14,6 @@
             flex-wrap: wrap;
         }
 
-        section {
-            height: 5vh;
-            width: 100vh;
-        }
-
        .cell {
             width: 25vh;
             height: 25vh;
@@ -46,7 +41,7 @@
     null, null, null,
     null, null, null ];
 
-    state.players = ['x', 'o'] 
+    state.players = ['', ''] 
     state.currentPlayerIndex = 0;   
 
  }
@@ -56,13 +51,13 @@ const getCurrentPlayer = () => state.players[state.currentPlayerIndex] // one li
  
 const changeTurn = () => {
      state.currentPlayerIndex = state.currentPlayerIndex === 0 ? 1 : 0; //ternary decides player order
+
+const render = () => {
+    renderPlayer();
+    renderBoard();
+    }   
 }
 
-// render
-// const renderState = () => {
-//     renderBoard();
-//     renderPlayer();
-// }
 
 
 // DOM selectors
@@ -83,8 +78,17 @@ const renderBoard = () => {
     }
 }
 const renderPlayer = () => { 
-    const text = `It is ${getCurrentPlayer()}'s turn`
-    playerTurnElem.innerText = text;
+    let text;
+    if (!state.players[0] || !state.players[1]) {
+        text = `
+            <input name ='player1' placerholder='enter player 1 name'>
+            <input name ='player2' placerholder='enter player 2 name'>
+            <button class ='start'> Start </button>
+            `
+    } else {
+      text = `${getCurrentPlayer()}'s turn`
+    }
+    playerTurnElem.innerHTML = text;
 }
    
 
@@ -99,13 +103,23 @@ boardElem.addEventListener('click', (event) => { //event delegation
     changeTurn();
     renderPlayer();
     renderBoard();
-
 }) 
+playerTurnElem.addEventListener('click', (event) => {
+    if (event.target.className !== 'start') return;
+
+    const player1input = document.getElementsByName('player1')[0];
+    state.players[0] = player1input.value;
+    const player2input = document.getElementsByName('player2')[0];
+    state.players[1] = player2input.value;
+
+    renderPlayer();
+})
+
 
 //bootstrapping
 resetState();
 renderBoard();
-// renderPlayer();
+renderPlayer();
 
     </script>
 
