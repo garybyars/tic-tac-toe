@@ -19,6 +19,7 @@
             height: 25vh;
             border: 1px solid black;
             font-size: 10vh;
+            color: black;
         }
 
     </style>
@@ -27,7 +28,7 @@
         <h1> tic-tac-toe</h1>
         <h2 id = 'score'> </h2>
      <main id ='board'> </main>
-        <div id ='player-select'> </div>
+        <div id ='player-turn'> </div>
     </body>
 
     <script>
@@ -38,14 +39,24 @@
     const resetState = () =>  { 
 
     state.board = [ 
-    null, null, null,
-    null, null, null,
-    null, null, null ];
+   {value: '', isEmpty: true},
+   {value: '', isEmpty: true},
+   {value: '', isEmpty: true},
+
+   {value: '', isEmpty: true},
+   {value: '', isEmpty: true},
+   {value: '', isEmpty: true},
+
+   {value: '', isEmpty: true},
+   {value: '', isEmpty: true},
+   {value: '', isEmpty: true},
+  ];
 
     state.players = ['', ''] 
-    state.currentPlayerIndex = 0;   
-    state.score = ['0','0']
-    state.lastSquareIndex = -1; // could also use .length somehow
+    state.currentPlayerIndex = 0;
+
+    state.scores = [0, 0];
+    // state.lastSquareIndex = -1; // could also use .length somehow
  }
 
 // helper functions
@@ -62,26 +73,27 @@ const renderAll = () => {
 }
     
 const takeTurn = (cellIndex) => {
-    if (!state.players[0] || !state.players[1]) return;
-    const square = state.board[cellIndex]
-    if(square) return; // look at this later
+    // if (!state.players[0] || !state.players[1]) return;
+    // const square = state.board[cellIndex]
+    // if(square) return; // look at this later
     
-    state.board[cellIndex]
+    
+    state.board[cellIndex].isEmpty = true;
 
-    const lastSquareMarked = state.board[state.lastSquareIndex] || {};
-    state.lastSquareIndex = cellIndex;
-    
-    if (square.value === lastSquareMarked.value) { // look into adding values to board for comparing
-    state.scores[state.currentPlayerIndex]++
-    } else {
+    state.scores[state.currentPlayerIndex]++;
     changeTurn();
+    
+    // if (square.value === lastSquareMarked.value) { // look into adding values to board for comparing
+    // state.scores[state.currentPlayerIndex]++
+    // } else {
     }
-}
+//}
 
 // DOM selectors
 const boardElem = document.getElementById('board'); 
-const playerTurnElem = document.getElementById('player-select');
+const playerTurnElem = document.getElementById('player-turn');
 const scoreElem = document.getElementById('score');
+const divElem = document.getElementsByTagName('div')[0];
 
 // DOM manipulations
 const renderBoard = () => { 
@@ -90,11 +102,18 @@ const renderBoard = () => {
         // const square = state.board[i]; // renames state.board[i]
         const cellElem = document.createElement('div'); // creates div elements
         cellElem.classList.add('cell'); // adds 'cell' class to cellElem
+        
+        if(cellElem.isEmpty === false) {
+            cellElem.innerText = `X` 
+        }
+
+
         cellElem.dataset.index = i; // adds data-index to divs
         // cellElem.innerHTML = square;
         boardElem.appendChild(cellElem); // appends cellElem to boardElem 
     }
 }
+
 const renderPlayer = () => { 
     let text;
     if (!state.players[0] || !state.players[1]) {
@@ -109,10 +128,20 @@ const renderPlayer = () => {
     playerTurnElem.innerHTML = text;
 }
 
+const renderMark = () => {
+    let text;
+    if (state.players[0]) {
+        text = `X`;
+    } else {
+        text = `O`;
+    }
+    divElem.innerText = text;
+}
+
 const renderScore = () => {
     scoreElem.innerHTML = `
-    <div>${state.players[0]}: ${state.score[0]}</div>
-    <div>${state.players[1]}: ${state.score[1]}</div>
+    <div>${state.players[0]}: ${state.scores[0]}</div>
+    <div>${state.players[1]}: ${state.scores[1]}</div>
     `
 }
 
@@ -120,13 +149,14 @@ const renderScore = () => {
 
 boardElem.addEventListener('click', (event) => { //event delegation
     if (event.target.className !== 'cell') return; //keeps user from clicking board border
- 
+    
     let cellIndex = event.target.dataset.index; //grabs data-index
-    state.board[cellIndex] = '';
-
-    changeTurn();
+    
+    takeTurn(cellIndex);
     renderAll();
-}) 
+
+// boardElem.addEventListener('click', (event) => {renderMark})
+})
 
 playerTurnElem.addEventListener('click', (event) => {
     if (event.target.className !== 'start') return;
@@ -138,6 +168,10 @@ playerTurnElem.addEventListener('click', (event) => {
 
     renderAll();
 })
+
+// divElem.addEventListener('click', (event) => {renderMark})
+
+// console.log(divElem.addEventListener)
 
 //bootstrapping
 resetState();
