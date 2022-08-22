@@ -4,21 +4,14 @@
     const resetState = () =>  { 
 
     state.board = [ 
-   {value: '', isFilled: false},
-   {value: '', isFilled: false},
-   {value: '', isFilled: false},
-   {value: '', isFilled: false},
-   {value: '', isFilled: false},
-   {value: '', isFilled: false},    
-   {value: '', isFilled: false},
-   {value: '', isFilled: false},
-   {value: '', isFilled: false},
+   {value: '', isFilled: false}, {value: '', isFilled: false}, {value: '', isFilled: false}, 
+   {value: '', isFilled: false}, {value: '', isFilled: false}, {value: '', isFilled: false},    
+   {value: '', isFilled: false}, {value: '', isFilled: false}, {value: '', isFilled: false},
   ];
 
     state.players = ['', ''] 
     state.currentPlayerIndex = 0;
     state.scores = [0, 0];
-    state.lastSquareIndex = -1; 
     state.winner = '';
  }
 
@@ -32,36 +25,48 @@ const changeTurn = () => {
 const takeTurn = (boxIndex) => {
     if(!state.players[0] || !state.players[1]) return;
 
-    if (state.board[boxIndex].isFilled) return;
-    
-     
+    if(!state.board[boxIndex].isFilled) {
     state.board[boxIndex].isFilled = true;
-    state.scores[state.currentPlayerIndex]++;
+    }
 
     changeTurn();
+    checkBoard(boxIndex);
     }
-    
 
 const renderAll = () => {
     renderBoard();
     renderPlayer();
     renderScore();
 }
-        
-// const checkBoard = () => {
-//     for (let i = 0; i < state.board.length; i ++) {
-//         const square = state.board[i];
-//         if (!square.isFilled) return;
-//     }
-//     state.winner = getWinner();
-// }
 
-// const getWinner = () => {
-//     const [player1Score, player2Score] = state.scores //destructuring
-//     let winningPlayerIndex = player1Score > player2Score ? 0 : 
-//         player1Score === player1Score ? -1 : 1; // ternary
-//     return state.players[winningPlayerIndex];
-// }
+    const checkBoard = () => {
+        const winConditions = [
+            [0, 1, 2],[3, 4, 5], [6, 7, 8], // win rows
+            [0, 3, 6],[1, 4, 7], [2, 5, 8], // win columns
+            [0, 4, 8],[2, 4, 6] // win diagonals 
+        ]
+    
+        let possibilities = ['','','','','','','','','']
+
+        for (i = 0; i < winConditions.length; i++) {
+            const boxIndex1 = possibilities[winConditions[i][0]]
+            const boxIndex2 = possibilities[winConditions[i][1]]
+            const boxIndex3 = possibilities[winConditions[i][2]]
+            if (boxIndex1 === '' || boxIndex2 === '' || boxIndex3 === '') continue;
+            if (boxIndex1 === boxIndex2 && boxIndex2 === boxIndex3) { 
+                state.scores[state.currentPlayerIndex]++
+
+                getWinner();
+            }
+        }
+    }
+
+const getWinner = () => {
+    const [player1Score, player2Score] = state.scores //destructuring
+    let winningPlayerIndex = player1Score > player2Score ? 0 : 
+        player1Score === player2Score ? -1 : 1; // ternary 
+            return state.players[winningPlayerIndex];
+}
 
 // DOM selectors
 const boardElem = document.getElementById('board'); 
@@ -72,9 +77,12 @@ const scoreElem = document.getElementById('score');
 const renderBoard = () => { 
     boardElem.innerText = ''; // reset board
     for (i = 0; i < state.board.length; i++) { // loops through board
-        const square = state.board[i]; // renames state.board[i]
         const boxElem = document.createElement('div'); // creates div elements
         boxElem.classList.add('box'); // adds 'box class to boxElem
+
+        if(state.board[i].isFilled) {
+            boxElem.innerText = state.board[i].value
+        }
 
         boxElem.dataset.index = i; // adds data-index to divs
         boardElem.appendChild(boxElem); // appends boxElem to boardElem 
@@ -92,7 +100,7 @@ const renderPlayer = () => {
     } else if (state.winner || state.winner === undefined) {
       const winner = getWinner() || 'nobody';
         text = `
-        <span class = 'player'> ${getWinner()} wins! </span>
+        <span class = 'player'> ${winner} wins! </span>
             ` ;
     } else {
       text = `${getCurrentPlayer()}'s turn`
@@ -101,10 +109,10 @@ const renderPlayer = () => {
 
     if(state.winner !== '') {
         const playAgainButton = document.createElement('button');
-        playAgainButton.innerHTML = `
-        <button class = 'restart' > Play Again? </button>
-        `;
-        playerTurnElem.appendChild(playAgainButton);
+            playAgainButton.innerHTML = `
+             <button class = 'restart' > Play Again? </button>
+             `;
+            playerTurnElem.appendChild(playAgainButton);
     }
 }
 
@@ -115,24 +123,18 @@ const renderScore = () => {
     `
 }
 
-function renderMark(boxIndex) {
+const renderMark = (boxIndex) => {
     for (i = 0; i < board.length; i++);
      const boxElem = document.getElementsByClassName('box')[boxIndex];
 
     if (state.players[0] && state.currentPlayerIndex === 0 && !state.board[boxIndex].isFilled) {
-        boxElem.innerText = `X`; 
-        boxElem.isFilled = true;
+        boxElem.innerText = `X`;
+        boxIndex[i].value = `X`;
 
-        takeTurn(boxIndex);
-    
     } if (state.players[1] && state.currentPlayerIndex === 1 && !state.board[boxIndex].isFilled) {
         boxElem.innerText = `O`;
-        boxElem.isFilled = true;
-        
-        takeTurn(boxIndex);
-
-    } else return 
-    
+    }
+    changeTurn();
 }
 
 // event listeners
@@ -146,15 +148,16 @@ boardElem.addEventListener('click', (event) => { //event delegation
         renderMark(boxIndex);
         renderPlayer();
         renderScore();
+        checkBoard(boxIndex);
     } 
 })
 
 playerTurnElem.addEventListener('click', (event) => {
-    if (event.target.className !== 'start') return;
     if (event.target.className === 'restart') {
         resetState();
         renderAll();
-    } else {    
+
+    } else if (event.target.className === 'start') { 
     const player1input = document.getElementsByName('player1')[0];
     state.players[0] = player1input.value;
 
