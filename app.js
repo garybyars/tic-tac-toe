@@ -93,8 +93,8 @@ const renderPlayer = () => {
     let text;
     if (!state.players[0] || !state.players[1]) {
         text = `
-            <input name ='player1' placeholder='enter player X's name'>
-            <input name ='player2' placeholder='enter player 0's name'>
+            <input class = 'player' name ='player1' placeholder='enter player X's name'>
+            <input class = 'player' name ='player2' placeholder='enter player 0's name'>
             <button class ='start'> Start </button>
             `
     } else if (state.winner || state.winner === undefined) {
@@ -103,7 +103,9 @@ const renderPlayer = () => {
         <span class = 'player'> ${winner} wins! </span>
             ` ;
     } else {
-      text = `${getCurrentPlayer()}'s turn`
+      text = `
+      <span class = 'player'> ${getCurrentPlayer()}'s turn </span>
+      ` 
     }
     playerTurnElem.innerHTML = text;
 
@@ -129,7 +131,6 @@ const renderMark = (boxIndex) => {
 
     if (state.players[0] && state.currentPlayerIndex === 0 && !state.board[boxIndex].isFilled) {
         boxElem.innerText = `X`;
-        boxIndex[i].value = `X`;
 
     } if (state.players[1] && state.currentPlayerIndex === 1 && !state.board[boxIndex].isFilled) {
         boxElem.innerText = `O`;

@@ -12,14 +12,19 @@ main {
     background-color: lightgoldenrodyellow;
     width: 75vh;
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
+    align-content: center;
     justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    
 }
 
 h1 {
     display: flex;
     justify-content: center;
-    font-family: fantasy;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     text-transform: uppercase;
 }
 
@@ -30,6 +35,49 @@ h1 {
     font-size: 10vh;
     color: black;
     font-family: monospace;
+}
+
+#score {
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 35vh;
+    padding-right: 35vh;
+}
+
+ input {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.player {
+    width: 25vh;
+    height: 5vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-left: auto;
+    margin-right: auto;
+    text-transform: uppercase;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.start {
+    width: 25vh;
+    height: 5vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-left: auto;
+    margin-right: auto;
+    text-transform: uppercase;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
