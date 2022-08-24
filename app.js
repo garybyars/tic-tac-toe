@@ -23,17 +23,13 @@ const changeTurn = () => {
 }   
 
 const takeTurn = (boxIndex) => {
-    if(!state.players[0] || !state.players[1]) return;
-
-    if(!state.board[boxIndex].isFilled) {
-    state.board[boxIndex].isFilled = true;
-    }
 
     changeTurn();
     checkBoard(boxIndex);
-    }
+}
 
 const renderAll = () => {
+
     renderBoard();
     renderPlayer();
     renderScore();
@@ -49,11 +45,11 @@ const renderAll = () => {
         let possibilities = ['','','','','','','','','']
 
         for (i = 0; i < winConditions.length; i++) {
-            const boxIndex1 = possibilities[winConditions[i][0]]
-            const boxIndex2 = possibilities[winConditions[i][1]]
-            const boxIndex3 = possibilities[winConditions[i][2]]
-            if (boxIndex1 === '' || boxIndex2 === '' || boxIndex3 === '') continue;
-            if (boxIndex1 === boxIndex2 && boxIndex2 === boxIndex3) { 
+            const boxIndex0 = possibilities[winConditions[i][0]]
+            const boxIndex1 = possibilities[winConditions[i][1]]
+            const boxIndex2 = possibilities[winConditions[i][2]]
+            if (boxIndex0 === '' || boxIndex1 === '' || boxIndex2 === '') continue;
+            if (boxIndex1 === boxIndex0 && boxIndex1 === boxIndex2) { 
                 state.scores[state.currentPlayerIndex]++
 
                 getWinner();
@@ -80,7 +76,7 @@ const renderBoard = () => {
         const boxElem = document.createElement('div'); // creates div elements
         boxElem.classList.add('box'); // adds 'box class to boxElem
 
-        if(state.board[i].isFilled) {
+        if(!state.board[i].isFilled) {
             boxElem.innerText = state.board[i].value
         }
 
@@ -93,18 +89,18 @@ const renderPlayer = () => {
     let text;
     if (!state.players[0] || !state.players[1]) {
         text = `
-            <input class = 'player' name ='player1' placeholder='enter player X's name'>
-            <input class = 'player' name ='player2' placeholder='enter player 0's name'>
-            <button class ='start'> Start </button>
+            <input id = 'menu' class = 'player' name ='player1' placeholder='enter player X's name'>
+            <input id = 'menu' class = 'player' name ='player2' placeholder='enter player 0's name'>
+            <button id = 'menu' class ='start'> Start </button>
             `
     } else if (state.winner || state.winner === undefined) {
       const winner = getWinner() || 'nobody';
         text = `
-        <span class = 'player'> ${winner} wins! </span>
+        <span id = 'win' class = 'player'> ${winner} wins! </span>
             ` ;
     } else {
       text = `
-      <span class = 'player'> ${getCurrentPlayer()}'s turn </span>
+      <span id = 'turn' class = 'player'> ${getCurrentPlayer()}'s turn </span>
       ` 
     }
     playerTurnElem.innerHTML = text;
@@ -129,13 +125,17 @@ const renderMark = (boxIndex) => {
     for (i = 0; i < board.length; i++);
      const boxElem = document.getElementsByClassName('box')[boxIndex];
 
-    if (state.players[0] && state.currentPlayerIndex === 0 && !state.board[boxIndex].isFilled) {
-        boxElem.innerText = `X`;
+    if (state.players[0] && state.currentPlayerIndex === 0 && !boxElem.isFilled) {
+        boxElem.innerHTML = `X`;
+        boxElem.isFilled === true;
 
-    } if (state.players[1] && state.currentPlayerIndex === 1 && !state.board[boxIndex].isFilled) {
-        boxElem.innerText = `O`;
+    } if (state.players[1] && state.currentPlayerIndex === 1 && !boxElem.isFilled) {
+        boxElem.innerHTML = `O`;
+        boxElem.isFilled === true;
     }
-    changeTurn();
+
+    takeTurn();
+    
 }
 
 // event listeners
@@ -144,7 +144,7 @@ boardElem.addEventListener('click', (event) => { //event delegation
     if (event.target.className !== 'box') return; //keeps user from clicking board border
 
     if (event.target.className === 'box') {
-        let boxIndex = event.target.dataset.index; //grabs data-index
+        const boxIndex = event.target.dataset.index; //grabs data-index
 
         renderMark(boxIndex);
         renderPlayer();

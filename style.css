@@ -18,7 +18,6 @@ main {
     justify-content: center;
     margin-left: auto;
     margin-right: auto;
-    
 }
 
 h1 {
@@ -26,6 +25,7 @@ h1 {
     justify-content: center;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     text-transform: uppercase;
+    color: ghostwhite;
 }
 
 .box {
@@ -44,34 +44,41 @@ h1 {
     justify-content: space-around;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 35vh;
-    padding-right: 35vh;
+    color: black;
+    font-size: 5vh;
 }
 
- input {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-left: auto;
-    margin-right: auto;
-}
 
-.player {
+#menu {
     width: 25vh;
     height: 5vh;
+    text-transform: uppercase;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: ghostwhite;
+    background-color: lightcoral;
+
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
     margin-left: auto;
     margin-right: auto;
-    text-transform: uppercase;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
 }
 
 .start {
     width: 25vh;
     height: 5vh;
+    text-transform: uppercase;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: ghostwhite;
+    background-color: lightpink;
+    font-size: 2vh;
+}
+
+.restart {
+    width: 25vh;
+    height: 5vh;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -80,4 +87,40 @@ h1 {
     margin-right: auto;
     text-transform: uppercase;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 2vh;
+}
+
+.box {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    font-size: 19vh;
+}
+
+.player {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    font-size: 2vh;
+    color: ghostwhite
+}
+
+#turn {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    font-size: 7vh;
+    color: ghostwhite
+}
+
+#win {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    font-size: 10vh;
+    color: ghostwhite
 }
